@@ -3,6 +3,7 @@ package be.usgprofessionals.model.employee;
 import be.usgprofessionals.model.EID;
 import be.usgprofessionals.model.dbclasses.Project;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,22 +13,23 @@ import java.util.List;
  */
 public class Employee {
 
-    private String birthday, firstname, lastname, email, profilePicURI, tel, dept_name, next_dept_name, employer_name, projectname;
+    private String first_name, last_name, email, profilePicURI, tel, dept_name, next_dept_name, employer_name, project_name;
     private int intern;
     private EID eid;
     private List<Project> projects;
+    private Date birthday;
 
-    public Employee(String birthday, String firstname, String lastname, String email, String profilePicURI, String tel,
-                    String dept_name, String next_dept_name, String employer_name, String projectname, int intern, EID eid, List<Project> projects) {
+    public Employee(Date birthday, String first_name, String last_name, String email, String profilePicURI, String tel,
+                    String dept_name, String next_dept_name, String employer_name, String project_name, int intern, EID eid, List<Project> projects) {
         this.birthday = birthday;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.email = email;
         this.profilePicURI = profilePicURI;
         this.tel = tel;
         this.dept_name = dept_name;
         this.employer_name = employer_name;
-        this.projectname = projectname;
+        this.project_name = project_name;
         this.intern = intern;
         this.eid = eid;
         this.projects = projects;
@@ -38,15 +40,15 @@ public class Employee {
     public String toString() {
         return "EmployeeExternal{" +
                 "birthday='" + birthday + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
                 ", email='" + email + '\'' +
                 ", profilePicURI='" + profilePicURI + '\'' +
                 ", tel='" + tel + '\'' +
                 ", dept_name='" + dept_name + '\'' +
                 ", next_dept_name='" + next_dept_name + "'" +
                 ", employer_name='" + employer_name + '\'' +
-                ", projectname='" + projectname + '\'' +
+                ", project_name='" + project_name + '\'' +
                 ", intern=" + intern +
                 ", eid=" + eid +
                 ", projects=" + projects +
@@ -61,28 +63,28 @@ public class Employee {
         this.projects = projects;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getEmail() {
@@ -125,12 +127,12 @@ public class Employee {
         this.employer_name = employer_name;
     }
 
-    public String getProjectname() {
-        return projectname;
+    public String getProject_name() {
+        return project_name;
     }
 
-    public void setProjectname(String projectname) {
-        this.projectname = projectname;
+    public void setProject_name(String project_name) {
+        this.project_name = project_name;
     }
 
     public int getIntern() {

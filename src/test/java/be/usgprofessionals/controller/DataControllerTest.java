@@ -1,9 +1,9 @@
 package be.usgprofessionals.controller;
 
+import be.usgprofessionals.model.UniqueList;
 import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
 import be.usgprofessionals.model.dbclasses.Project;
 import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
-import be.usgprofessionals.model.UniqueList;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class DataControllerTest {
     }
 
     @Test
-    public void testCreateEmploeeObjectRunsCorrectly() throws Exception {
+    public void testCreateEmployeeObjectRunsCorrectly() throws Exception {
         UniqueList<Project> projects = new UniqueList<>();
         Project p1 = new Project("ICT - General", "USG", "123456", "Jan 1, 2009", "Apr 23, 2008");
         Project p2 = new Project("ICT - General", "USG", "123456", "Jan 1, 2010", "Apr 23, 2008");
@@ -55,8 +55,13 @@ public class DataControllerTest {
         projects.addProject(p1);
         projects.addProject(p2);
         projects.addProject(p3);
-        SpeakapEmployee speakapEmployee = new SpeakapEmployee("12345abcde6789ts", "", "Thomas", "Straetmans", "", "");
-        ConsultantEmployee consultantEmployee = new ConsultantEmployee("22/12/1991", "ICT - General", "thomasstraetmans@hotmail.com", "", "Straetmans Thomas", 1000, "123456", "");
+        SpeakapEmployee speakapEmployee = new SpeakapEmployee("12345abcde6789ts", "", "Thomas", "Straetmans", "", "", "");
+        ConsultantEmployee consultantEmployee = new ConsultantEmployee("Jan 1, 1991", "ICT - General", "thomasstraetmans@hotmail.com", "", "Straetmans Thomas", 1000, "123456", "");
         System.out.println(dataController.createEmployeeObject(speakapEmployee, consultantEmployee, projects));
+    }
+
+    @Test
+    public void run() {
+        dataController.run().forEach(System.out::println);
     }
 }

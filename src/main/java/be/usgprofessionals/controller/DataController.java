@@ -8,20 +8,14 @@ import be.usgprofessionals.QProjectsdump;
 import be.usgprofessionals.QSpeakapdump;
 import be.usgprofessionals.model.EID;
 import be.usgprofessionals.model.UniqueList;
-import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
-import be.usgprofessionals.model.dbclasses.InternalEmployee;
-import be.usgprofessionals.model.dbclasses.Project;
-import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
+import be.usgprofessionals.model.dbclasses.*;
 import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by Thomas Straetmans on 16/02/2016.
@@ -33,10 +27,15 @@ public class DataController {
 
     @Autowired
     private DatadumpDBController datadumpDbController;
+    @Autowired
+    private DigigramDBController digigramDBController;
 
     public DataController() {
         if (datadumpDbController == null) {
             datadumpDbController = new DatadumpDBController();
+        }
+        if (digigramDBController == null) {
+            digigramDBController = new DigigramDBController();
         }
     }
 
@@ -58,7 +57,7 @@ public class DataController {
                 errors.add(dnfe.getMessage());
                 try {
                     InternalEmployee internalEmployee = datadumpDbController.getInternal(name, firstname);
-                    digiEmployees.add(createEmployeeObject(employees.get(i),internalEmployee, null));
+                    digiEmployees.add(createEmployeeObject(employees.get(i), internalEmployee, null));
                 } catch (DataMergeException | DataNotFoundException e) {
                     errors.add(e.getMessage());
                     e.printStackTrace();
@@ -86,13 +85,29 @@ public class DataController {
         if (consultantInternalEmployee instanceof ConsultantEmployee) {
             ConsultantEmployee consultantEmployee = (ConsultantEmployee) consultantInternalEmployee;
             Project mainProject = getMainProject(projects);
-            return new Employee(consultantEmployee.getBirthday(), speakapEmployee.getFirstname(), speakapEmployee.getLastname(),
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+            Date birthday;
+            try {
+                birthday = sdf.parse(consultantEmployee.getBirthday());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                birthday = new Date();
+            }
+            return new Employee(birthday, speakapEmployee.getFirstname(), speakapEmployee.getLastname(),
                     consultantEmployee.getEmail(), speakapEmployee.getProfilePicURL(), consultantEmployee.getMobile(), mainProject.getBranch(), null, mainProject.getCostumer(),
-                    mainProject.getBranch(), 0, new EID(speakapEmployee.getEid()), projects);
+                    "Consultant " + mainProject.getBranch(), 0, new EID(speakapEmployee.getEid()), projects);
         } else if (consultantInternalEmployee instanceof InternalEmployee) {
             InternalEmployee internalEmployee = (InternalEmployee) consultantInternalEmployee;
             internalEmployee = setDepartments(internalEmployee);
-            return new Employee(speakapEmployee.getBirthday(), speakapEmployee.getFirstname(), speakapEmployee.getLastname(), internalEmployee.geteMail(), speakapEmployee.getProfilePicURL(),
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date birthday;
+            try {
+                birthday = sdf.parse(speakapEmployee.getBirthday());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                birthday = new Date();
+            }
+            return new Employee(birthday, speakapEmployee.getFirstname(), speakapEmployee.getLastname(), internalEmployee.geteMail(), speakapEmployee.getProfilePicURL(),
                     internalEmployee.getMobile(), internalEmployee.getTeam(), internalEmployee.getNext_dept(), "USG Professionals", internalEmployee.getFunction(), 1, new EID(speakapEmployee.getEid()), null);
         } else {
             return null;
@@ -168,9 +183,12 @@ public class DataController {
 
     private void insertEmployee(Employee employee) throws Exception {
         boolean manager = false;
-        int dept_id = ;
-        int next_dept_id = ;
-        
+        Department dept = digigramDBController.getDeptId(employee.getDept_name());
+        Department next_dept = digigramDBController.getDeptId(employee.getNext_dept_name());
+        Employer employer = digigramDBController.getCreateEmployerID(employee.getEmployer_name());
+        int project_id = digigramDBController.getCreateProjectID(employee.getProject_name());
+        digigramDBController.insertEmployee(dept, next_dept, employer.getEmployer_id(), employee, project_id);
         //TODO set reportsTo
     }
+
 }
