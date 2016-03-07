@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class Employee {
 
-    private String birthday, firstname, lastname, email, profilePicURI, tel, dept_name, employer_name, projectname;
+    private String birthday, firstname, lastname, email, profilePicURI, tel, dept_name, next_dept_name, employer_name, projectname;
     private int intern;
     private EID eid;
     private List<Project> projects;
 
     public Employee(String birthday, String firstname, String lastname, String email, String profilePicURI, String tel,
-                    String dept_name, String employer_name, String projectname, int intern, EID eid, List<Project> projects) {
+                    String dept_name, String next_dept_name, String employer_name, String projectname, int intern, EID eid, List<Project> projects) {
         this.birthday = birthday;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -31,6 +31,7 @@ public class Employee {
         this.intern = intern;
         this.eid = eid;
         this.projects = projects;
+        this.next_dept_name = next_dept_name;
     }
 
     @Override
@@ -43,6 +44,7 @@ public class Employee {
                 ", profilePicURI='" + profilePicURI + '\'' +
                 ", tel='" + tel + '\'' +
                 ", dept_name='" + dept_name + '\'' +
+                ", next_dept_name='" + next_dept_name + "'" +
                 ", employer_name='" + employer_name + '\'' +
                 ", projectname='" + projectname + '\'' +
                 ", intern=" + intern +
@@ -145,5 +147,13 @@ public class Employee {
 
     public void setEid(EID eid) {
         this.eid = eid;
+    }
+
+    public String getNext_dept_name() {
+        return next_dept_name;
+    }
+
+    public void setNext_dept_name(String next_dept_name) {
+        this.next_dept_name = next_dept_name;
     }
 }

@@ -92,6 +92,33 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>com.mysema.querydsl</groupId>
+                <artifactId>querydsl-maven-plugin</artifactId>
+                <version>3.6.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>export</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbcDriver>com.mysql.jdbc.Driver</jdbcDriver>
+                    <jdbcUrl>jdbc:mysql://wide.synology.me:3306/Digigram</jdbcUrl>
+                    <jdbcUser>pantera</jdbcUser>
+                    <jdbcPassword>pantsy123</jdbcPassword>
+                    <packageName>be.usgprofessionals</packageName>
+                    <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.25</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 

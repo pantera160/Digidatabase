@@ -19,6 +19,7 @@ public class InternalEmployee {
     public String name;
     public String office;
     public String team;
+    public String next_dept;
 
     public InternalEmployee(String eMail, String firstName, String fix, String function, String level0, String level1, String level2,
                             String level3, String mobile, String name, String office, String team) {
@@ -148,5 +149,13 @@ public class InternalEmployee {
                 ", office='" + office + '\'' +
                 ", team='" + team + '\'' +
                 '}';
+    }
+
+    public String getNext_dept() {
+        return next_dept;
+    }
+
+    public void setNext_dept(String next_dept) {
+        this.next_dept = next_dept;
     }
 }

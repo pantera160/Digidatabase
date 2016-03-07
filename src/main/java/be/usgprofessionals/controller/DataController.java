@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Thomas Straetmans on 16/02/2016.
@@ -31,18 +32,18 @@ import java.util.List;
 public class DataController {
 
     @Autowired
-    private DBController dbController;
+    private DatadumpDBController datadumpDbController;
 
     public DataController() {
-        if (dbController == null) {
-            dbController = new DBController();
+        if (datadumpDbController == null) {
+            datadumpDbController = new DatadumpDBController();
         }
     }
 
     public ArrayList<String> run() {
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
         QConsultantdump qConsultantdump = new QConsultantdump("c");
-        List<SpeakapEmployee> employees = dbController.getAllEmployees();
+        List<SpeakapEmployee> employees = datadumpDbController.getAllEmployees();
         ArrayList<String> errors = new ArrayList<>();
         ArrayList<Employee> digiEmployees = new ArrayList<>();
         for (int i = 0; i < employees.size(); i++) {
@@ -50,15 +51,18 @@ public class DataController {
             String firstname = employees.get(i).getFirstname();
             try {
 
-                ConsultantEmployee consultant = dbController.getConsultant(name + " " + firstname);
+                ConsultantEmployee consultant = datadumpDbController.getConsultant(name + " " + firstname);
                 List<Project> projects = getProjects(consultant.getIdnr());
                 digiEmployees.add(createEmployeeObject(employees.get(i), consultant, projects));
             } catch (DataNotFoundException dnfe) {
                 errors.add(dnfe.getMessage());
                 try {
-                    InternalEmployee internalEmployee = dbController.getInternal(name, firstname);
+                    InternalEmployee internalEmployee = datadumpDbController.getInternal(name, firstname);
+                    digiEmployees.add(createEmployeeObject(employees.get(i),internalEmployee, null));
                 } catch (DataMergeException | DataNotFoundException e) {
                     errors.add(e.getMessage());
+                    e.printStackTrace();
+                } catch (EIDFormatIncorrectException e) {
                     e.printStackTrace();
                 }
                 dnfe.printStackTrace();
@@ -69,9 +73,7 @@ public class DataController {
             }
         }
 
-        insertEmployees(errors, digiEmployees);
-
-        return errors;
+        return insertEmployees(errors, digiEmployees);
     }
 
     private boolean insertData(SpeakapEmployee speakapEmployee, ConsultantEmployee consultantEmployee, List<Project> projects) {
@@ -85,15 +87,44 @@ public class DataController {
             ConsultantEmployee consultantEmployee = (ConsultantEmployee) consultantInternalEmployee;
             Project mainProject = getMainProject(projects);
             return new Employee(consultantEmployee.getBirthday(), speakapEmployee.getFirstname(), speakapEmployee.getLastname(),
-                    consultantEmployee.getEmail(), speakapEmployee.getProfilePicURL(), consultantEmployee.getMobile(), mainProject.getBranch(), mainProject.getCostumer(),
+                    consultantEmployee.getEmail(), speakapEmployee.getProfilePicURL(), consultantEmployee.getMobile(), mainProject.getBranch(), null, mainProject.getCostumer(),
                     mainProject.getBranch(), 0, new EID(speakapEmployee.getEid()), projects);
         } else if (consultantInternalEmployee instanceof InternalEmployee) {
             InternalEmployee internalEmployee = (InternalEmployee) consultantInternalEmployee;
+            internalEmployee = setDepartments(internalEmployee);
             return new Employee(speakapEmployee.getBirthday(), speakapEmployee.getFirstname(), speakapEmployee.getLastname(), internalEmployee.geteMail(), speakapEmployee.getProfilePicURL(),
-                    internalEmployee.getMobile(), internalEmployee.getTeam(), "USG Professionals", internalEmployee.getFunction(), 1, new EID(speakapEmployee.getEid()), null);
+                    internalEmployee.getMobile(), internalEmployee.getTeam(), internalEmployee.getNext_dept(), "USG Professionals", internalEmployee.getFunction(), 1, new EID(speakapEmployee.getEid()), null);
         } else {
             return null;
         }
+    }
+
+    private InternalEmployee setDepartments(InternalEmployee internalEmployee) {
+        String level0 = internalEmployee.getLevel0();
+        String level1 = internalEmployee.getLevel0();
+        String level2 = internalEmployee.getLevel2();
+        String level3 = internalEmployee.getLevel3();
+        String department = internalEmployee.getTeam();
+        if (!Objects.equals(level0, "")) {
+            internalEmployee.setNext_dept(returnDeptName(level1));
+        } else if (!Objects.equals(level1, "")) {
+            internalEmployee.setTeam(returnDeptName(level1));
+            internalEmployee.setNext_dept(level2);
+        } else if (!Objects.equals(level2, "")) {
+            if (!Objects.equals(level3, "")) {
+                internalEmployee.setNext_dept(internalEmployee.getTeam());
+            }
+            internalEmployee.setTeam(level2);
+        }
+        return internalEmployee;
+    }
+
+    private String returnDeptName(String level) {
+        if (level.equals("Root Op +1")) {
+            return "Operations";
+        } else if (level.equals("Root Mang +1")) {
+            return "Management Team";
+        } else return null;
     }
 
     public Project getMainProject(List<Project> projects) {
@@ -117,13 +148,29 @@ public class DataController {
     }
 
     public UniqueList<Project> getProjects(String idnr) throws DataMergeException {
-        List<Project> projects = dbController.getProjects(idnr);
+        List<Project> projects = datadumpDbController.getProjects(idnr);
         UniqueList<Project> uniqueProjects = new UniqueList<>();
         projects.forEach(uniqueProjects::addProject);
         return uniqueProjects;
     }
 
-    private void insertEmployees(ArrayList<String> errors, ArrayList<Employee> employees){
+    private ArrayList<String> insertEmployees(ArrayList<String> errors, ArrayList<Employee> employees) {
+        employees
+                .forEach(employee -> {
+                    try {
+                        insertEmployee(employee);
+                    } catch (Exception e) {
+                        errors.add(e.getMessage());
+                    }
+                });
+        return errors;
+    }
 
+    private void insertEmployee(Employee employee) throws Exception {
+        boolean manager = false;
+        int dept_id = ;
+        int next_dept_id = ;
+        
+        //TODO set reportsTo
     }
 }

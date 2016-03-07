@@ -20,17 +20,17 @@ import static org.junit.Assert.assertTrue;
  * <p>
  * Digidatabase for USG Professionals
  */
-public class DBControllerTest {
-    DBController dbController;
+public class DatadumpDBControllerTest {
+    DatadumpDBController datadumpDbController;
 
     @Before
     public void setUp() {
-        dbController = new DBController();
+        datadumpDbController = new DatadumpDBController();
     }
 
     @Test
     public void testGetAllEmployees() throws Exception {
-        ArrayList<SpeakapEmployee> list = dbController.getAllEmployees();
+        ArrayList<SpeakapEmployee> list = datadumpDbController.getAllEmployees();
         System.out.println(list.size());
         System.out.println(list.get(list.size() / 2));
         assertTrue(list.size() > 0);
@@ -38,14 +38,14 @@ public class DBControllerTest {
 
     @Test
     public void testGetConsultant() throws Exception {
-        ConsultantEmployee consultantEmployee = dbController.getConsultant("Straetmans Thomas");
+        ConsultantEmployee consultantEmployee = datadumpDbController.getConsultant("Straetmans Thomas");
         System.out.println(consultantEmployee);
         assertTrue(consultantEmployee.getIdnr().equals("3456739"));
     }
 
     @Test(expected = DataMergeException.class)
     public void testGetConsultantMultipleWithSameNameExists() throws Exception {
-        ConsultantEmployee consultantEmployee = dbController.getConsultant("Vliegen Lize");
+        ConsultantEmployee consultantEmployee = datadumpDbController.getConsultant("Vliegen Lize");
     }
 
     @Rule
@@ -55,24 +55,24 @@ public class DBControllerTest {
     public void correctMessageThrownWhenMultipleWithSameNameExist() throws DataNotFoundException, DataMergeException {
         expectedException.expect(DataMergeException.class);
         expectedException.expectMessage("Multiple consultants with the same name have been found. Please add these consultants manually. Consultants name: Vliegen Lize");
-        ConsultantEmployee consultantEmployee = dbController.getConsultant("Vliegen Lize");
+        ConsultantEmployee consultantEmployee = datadumpDbController.getConsultant("Vliegen Lize");
     }
 
     @Test(expected = DataNotFoundException.class)
     public void testGetConsultantRequestedNameDoesNotExist() throws Exception {
-        ConsultantEmployee consultantEmployee = dbController.getConsultant("Willy Wonka");
+        ConsultantEmployee consultantEmployee = datadumpDbController.getConsultant("Willy Wonka");
     }
 
     @Test
     public void correctMessageThrownWhenNoneWithThisNameExist() throws DataNotFoundException, DataMergeException {
         expectedException.expect(DataNotFoundException.class);
         expectedException.expectMessage("No consultant with the following name has been found in consultantsdump, if persists in internaldump check speakap database. Name: Willy Wonka");
-        ConsultantEmployee consultantEmployee = dbController.getConsultant("Willy Wonka");
+        ConsultantEmployee consultantEmployee = datadumpDbController.getConsultant("Willy Wonka");
     }
 
     @Test
     public void testGetProjects() throws DataNotFoundException, DataMergeException {
-        List<Project> projects = dbController.getProjects("1681302");
+        List<Project> projects = datadumpDbController.getProjects("1681302");
         System.out.println(projects.size());
         System.out.println(projects.get(projects.size() / 2));
         assertTrue(projects.size() > 0);
@@ -82,17 +82,17 @@ public class DBControllerTest {
     public void dataMergeExceptionThownWhenNonExistingIdIsRequested() throws Exception {
         expectedException.expect(DataMergeException.class);
         expectedException.expectMessage("o project has been found for the employee by number: 000002");
-        List<Project> projects = dbController.getProjects("000002");
+        List<Project> projects = datadumpDbController.getProjects("000002");
     }
 
     @Test
     public void testTimeToRequestAllConsultants() throws Exception {
         long starttime = System.nanoTime();
-        ArrayList<SpeakapEmployee> speakaps = dbController.getAllEmployees();
+        ArrayList<SpeakapEmployee> speakaps = datadumpDbController.getAllEmployees();
         ArrayList<ConsultantEmployee> consultants = new ArrayList<>();
         speakaps.forEach(employee -> {
             try {
-                consultants.add(dbController.getConsultant(employee.getLastname() + " " + employee.getFirstname()));
+                consultants.add(datadumpDbController.getConsultant(employee.getLastname() + " " + employee.getFirstname()));
             } catch (DataMergeException | DataNotFoundException e) {
                 e.printStackTrace();
             }
