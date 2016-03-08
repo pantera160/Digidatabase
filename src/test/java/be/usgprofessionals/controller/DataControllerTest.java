@@ -59,9 +59,4 @@ public class DataControllerTest {
         ConsultantEmployee consultantEmployee = new ConsultantEmployee("Jan 1, 1991", "ICT - General", "thomasstraetmans@hotmail.com", "", "Straetmans Thomas", 1000, "123456", "");
         System.out.println(dataController.createEmployeeObject(speakapEmployee, consultantEmployee, projects));
     }
-
-    @Test
-    public void run() {
-        dataController.run().forEach(System.out::println);
-    }
 }
