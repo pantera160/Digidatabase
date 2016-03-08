@@ -184,7 +184,12 @@ public class DataController {
     private void insertEmployee(Employee employee) throws Exception {
         boolean manager = false;
         Department dept = digigramDBController.getDeptId(employee.getDept_name());
-        Department next_dept = digigramDBController.getDeptId(employee.getNext_dept_name());
+        Department next_dept;
+        if (employee.getNext_dept_name() != null) {
+            next_dept = digigramDBController.getDeptId(employee.getNext_dept_name());
+        } else {
+            next_dept = new Department(null, -1, null);
+        }
         Employer employer = digigramDBController.getCreateEmployerID(employee.getEmployer_name());
         int project_id = digigramDBController.getCreateProjectID(employee.getProject_name());
         digigramDBController.insertEmployee(dept, next_dept, employer.getEmployer_id(), employee, project_id);

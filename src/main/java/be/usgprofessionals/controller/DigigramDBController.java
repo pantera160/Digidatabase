@@ -73,7 +73,7 @@ public class DigigramDBController extends DBController {
     public void insertEmployee(Department dept, Department next_dept, int employer_id, Employee employee, int project_id) throws SQLException {
         createConnectionQuery();
         PreparedStatement stmt = connection.prepareStatement("insert into users values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        stmt.setString(1, employee.getEid().toString());
+        stmt.setString(1, employee.getEid().getId());
         stmt.setString(2, employee.getFirst_name());
         stmt.setString(3, employee.getLast_name());
         stmt.setString(4, employee.getProfilePicURI());
@@ -82,8 +82,12 @@ public class DigigramDBController extends DBController {
         stmt.setInt(7, employer_id);
         stmt.setInt(8, employee.getIntern());
         stmt.setInt(9, dept.getDept_id());
-        stmt.setString(10, dept.getReportsTo().toString());
-        stmt.setInt(11, next_dept.getDept_id());
+        stmt.setString(10, dept.getReportsTo().getId());
+        if (next_dept.getDept_id() == -1) {
+            stmt.setObject(11, null);
+        } else {
+            stmt.setInt(11, next_dept.getDept_id());
+        }
         stmt.setDate(12, new Date(employee.getBirthday().getTime()));
         stmt.setString(13, employee.getEmail());
         stmt.setString(14, employee.getTel());
