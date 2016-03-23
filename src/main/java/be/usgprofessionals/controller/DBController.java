@@ -1,8 +1,11 @@
 package be.usgprofessionals.controller;
 
 import com.mysema.query.sql.MySQLTemplates;
+import com.mysema.query.sql.RelationalPathBase;
 import com.mysema.query.sql.SQLQuery;
 import com.mysema.query.sql.SQLTemplates;
+import com.mysema.query.sql.dml.SQLDeleteClause;
+import com.mysema.query.sql.dml.SQLInsertClause;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -34,6 +37,24 @@ public abstract class DBController {
     }
 
     protected SQLQuery createConnectionQuery() {
+        createConnection();
+        SQLTemplates dialect = new MySQLTemplates();
+        return new SQLQuery(connection, dialect);
+    }
+
+    protected SQLInsertClause createInsertClause(RelationalPathBase RPB) {
+        createConnection();
+        SQLTemplates dialect = new MySQLTemplates();
+        return new SQLInsertClause(connection, dialect, RPB);
+    }
+
+    protected SQLDeleteClause createDeleteClause(RelationalPathBase RPB) {
+        createConnection();
+        SQLTemplates dialect = new MySQLTemplates();
+        return new SQLDeleteClause(connection, dialect, RPB);
+    }
+
+    private void createConnection() {
         if (connection == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -42,7 +63,5 @@ public abstract class DBController {
                 e.printStackTrace();
             }
         }
-        SQLTemplates dialect = new MySQLTemplates();
-        return new SQLQuery(connection, dialect);
     }
 }

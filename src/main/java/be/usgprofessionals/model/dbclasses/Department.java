@@ -2,11 +2,14 @@ package be.usgprofessionals.model.dbclasses;
 
 import be.usgprofessionals.model.EID;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by Thomas Straetmans on 07/03/2016.
  * <p>
  * Digidatabase for USG Professionals
  */
+@XmlRootElement
 public class Department {
     private String dept_name;
     private int dept_id;

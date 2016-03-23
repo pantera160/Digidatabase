@@ -12,7 +12,9 @@ import be.usgprofessionals.model.dbclasses.*;
 import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,6 +25,7 @@ import java.util.*;
  * Digidatabase for USG Professionals
  */
 @ComponentScan("be.usgprofessionals.controller")
+@Component
 public class DataController {
 
     @Autowired
@@ -196,4 +199,41 @@ public class DataController {
         //TODO set reportsTo
     }
 
+
+    public ArrayList<Department> getAllDepartments() {
+        try {
+            return digigramDBController.getAllDepartments();
+        } catch (SQLException | EIDFormatIncorrectException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public ArrayList<SpeakapEmployee> getAllSpeakaps() {
+        return datadumpDbController.getAllSpeakaps();
+    }
+
+    public void newSpeakap(SpeakapEmployee e) {
+        datadumpDbController.newSpeakap(e);
+    }
+
+    public void newDepartment(Department department) {
+        try {
+            digigramDBController.newDepartment(department);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSpeakap(String id) {
+        datadumpDbController.deleteSpeakap(id);
+    }
+
+    public void deleteDepartment(String id) {
+        try {
+            digigramDBController.deleteDepartment(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

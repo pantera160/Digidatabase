@@ -9,6 +9,7 @@ import be.usgprofessionals.model.employee.Employee;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by Thomas Straetmans on 02/03/16.
@@ -103,5 +104,31 @@ public class DigigramDBController extends DBController {
         } else {
             return result.getInt(1);
         }
+    }
+
+    public ArrayList<Department> getAllDepartments() throws SQLException, EIDFormatIncorrectException {
+        ArrayList<Department> departments = new ArrayList<>();
+        createConnectionQuery();
+        Statement stmt = connection.createStatement();
+        ResultSet result = stmt.executeQuery("select dept_id, dept_name, manager_id from departments");
+        while (result.next()) {
+            departments.add(new Department(result.getString(2), result.getInt(1), new EID(result.getString(3))));
+        }
+        return departments;
+    }
+
+    public void newDepartment(Department department) throws SQLException {
+        createConnectionQuery();
+        PreparedStatement stmt = connection.prepareStatement("insert into departments('DEPT_NAME', 'MANAGER_ID') values(?,?)");
+        stmt.setString(1, department.getDept_name());
+        stmt.setString(2, department.getReportsTo().toString());
+        stmt.executeUpdate();
+    }
+
+    public void deleteDepartment(String id) throws SQLException {
+        createConnectionQuery();
+        PreparedStatement stmt = connection.prepareStatement(("DELETE from departments where dept_id = ?"));
+        stmt.setInt(1, Integer.parseInt(id));
+        stmt.executeUpdate();
     }
 }

@@ -2,11 +2,14 @@ package be.usgprofessionals.model;
 
 import be.usgprofessionals.Exceptions.EIDFormatIncorrectException;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by Thomas Straetmans on 16/02/2016.
  * <p>
  * Digidatabase for USG Professionals
  */
+@XmlRootElement
 public class EID {
 
     private String id;

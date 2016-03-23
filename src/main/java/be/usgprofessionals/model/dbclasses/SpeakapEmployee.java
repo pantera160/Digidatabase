@@ -1,11 +1,14 @@
 package be.usgprofessionals.model.dbclasses;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by Thomas Straetmans on 18/02/2016.
  * <p>
  * Digidatabase for USG Professionals
  */
 //POJO that contains the data from an employee found in Speakap.
+@XmlRootElement
 public class SpeakapEmployee {
 
     private String birthday;

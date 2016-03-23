@@ -6,14 +6,14 @@ import be.usgprofessionals.QConsultantdump;
 import be.usgprofessionals.QInternaldump;
 import be.usgprofessionals.QProjectsdump;
 import be.usgprofessionals.QSpeakapdump;
-import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
-import be.usgprofessionals.model.dbclasses.InternalEmployee;
-import be.usgprofessionals.model.dbclasses.Project;
-import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
+import be.usgprofessionals.model.dbclasses.*;
 import com.mysema.query.Tuple;
 import com.mysema.query.sql.MySQLTemplates;
 import com.mysema.query.sql.SQLQuery;
+import com.mysema.query.sql.SQLSerializer;
 import com.mysema.query.sql.SQLTemplates;
+import com.mysema.query.sql.dml.SQLDeleteClause;
+import com.mysema.query.sql.dml.SQLInsertClause;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -103,5 +103,27 @@ public class DatadumpDBController extends DBController {
         }
     }
 
+    public ArrayList<SpeakapEmployee> getAllSpeakaps() {
+        ArrayList<SpeakapEmployee> speakapEmployees = new ArrayList<>();
+        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
+        SQLQuery query = createConnectionQuery();
+        List<Tuple> results = query
+                .from(qSpeakapdump)
+                .list(qSpeakapdump.eid, qSpeakapdump.firstname, qSpeakapdump.lastname, qSpeakapdump.birthday, qSpeakapdump.email, qSpeakapdump.profilePicURL, qSpeakapdump.tel);
+        results.forEach(t -> speakapEmployees.add(new SpeakapEmployee(t.get(qSpeakapdump.eid), t.get(qSpeakapdump.email), t.get(qSpeakapdump.firstname), t.get(qSpeakapdump.lastname),
+                t.get(qSpeakapdump.profilePicURL), t.get(qSpeakapdump.tel), t.get(qSpeakapdump.birthday).toString())));
+        return speakapEmployees;
+    }
 
+    public void newSpeakap(SpeakapEmployee e) {
+        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
+        SQLInsertClause query = createInsertClause(qSpeakapdump);
+        query.values(e.getEid(), e.getEmail(), e.getFirstname(), e.getLastname(), e.getBirthday(), e.getTel(), e.getProfilePicURL()).execute();
+    }
+
+    public void deleteSpeakap(String id) {
+        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
+        SQLDeleteClause query = createDeleteClause(qSpeakapdump);
+        query.where(qSpeakapdump.eid.eq(id)).execute();
+    }
 }
