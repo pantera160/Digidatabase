@@ -4,7 +4,6 @@ import be.usgprofessionals.Exceptions.DataMergeException;
 import be.usgprofessionals.Exceptions.DataNotFoundException;
 import be.usgprofessionals.Exceptions.EIDFormatIncorrectException;
 import be.usgprofessionals.QConsultantdump;
-import be.usgprofessionals.QProjectsdump;
 import be.usgprofessionals.QSpeakapdump;
 import be.usgprofessionals.model.EID;
 import be.usgprofessionals.model.UniqueList;
@@ -28,7 +27,7 @@ import java.util.*;
 @Component
 public class DataController {
 
-    @Autowired
+    //@Autowired
     private DatadumpDBController datadumpDbController;
     @Autowired
     private DigigramDBController digigramDBController;
@@ -79,7 +78,6 @@ public class DataController {
     }
 
     private boolean insertData(SpeakapEmployee speakapEmployee, ConsultantEmployee consultantEmployee, List<Project> projects) {
-        QProjectsdump qProjectsdump = new QProjectsdump("p");
 
         return true;
     }
@@ -235,5 +233,28 @@ public class DataController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Employee> getAllEmployees() {
+        try {
+            return digigramDBController.getAllEmployees();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public String newEmployee(Employee employee) {
+        try {
+            digigramDBController.createNewEmployee(employee);
+            return "";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+    public void deleteEmployee(String eid) {
+        digigramDBController.deleteEmployee(eid);
     }
 }

@@ -3,6 +3,7 @@ package be.usgprofessionals.RESTService;
 import be.usgprofessionals.controller.DataController;
 import be.usgprofessionals.model.dbclasses.Department;
 import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
+import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,8 +57,18 @@ public class RESTService {
     }
 
     @RequestMapping("/employees")
-    public void getAllEmployees() {
+    public ArrayList<Employee> getAllEmployees() {
+        return dataController.getAllEmployees();
+    }
 
+    @RequestMapping("/deleteemployee")
+    public void deleteEmployee(String eid) {
+        dataController.deleteEmployee(eid);
+    }
+
+    @RequestMapping("/newemployee")
+    public String newEmployee(Employee employee) {
+        return dataController.newEmployee(employee);
     }
 
     @RequestMapping("/speakaps")

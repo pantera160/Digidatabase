@@ -3,6 +3,7 @@ package be.usgprofessionals.model.employee;
 import be.usgprofessionals.model.EID;
 import be.usgprofessionals.model.dbclasses.Project;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * <p>
  * Digidatabase for USG Professionals
  */
+@XmlRootElement
 public class Employee {
 
     private String first_name, last_name, email, profilePicURI, tel, dept_name, next_dept_name, employer_name, project_name;
