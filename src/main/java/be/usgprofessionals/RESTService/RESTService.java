@@ -3,6 +3,7 @@ package be.usgprofessionals.RESTService;
 import be.usgprofessionals.controller.DataController;
 import be.usgprofessionals.model.dbclasses.Department;
 import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
+import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,18 +46,23 @@ public class RESTService {
     }
 
     @RequestMapping("/newdepartment")
-    public void createNewDepartment(Department department) {
-        dataController.newDepartment(department);
+    public boolean createNewDepartment(Department department) {
+        return dataController.newDepartment(department);
     }
 
     @RequestMapping("/deletedepartment")
-    public void deleteDepartment(String id) {
-        dataController.deleteDepartment(id);
+    public boolean deleteDepartment(String id) {
+        return dataController.deleteDepartment(id);
     }
 
     @RequestMapping("/employees")
     public void getAllEmployees() {
 
+    }
+
+    @RequestMapping("/newemployee")
+    public boolean createNewEmployee(Employee employee) {
+        return false;
     }
 
     @RequestMapping("/speakaps")
@@ -65,12 +71,12 @@ public class RESTService {
     }
 
     @RequestMapping("/newspeakap")
-    public void createNewSpeakap(SpeakapEmployee e) {
-        dataController.newSpeakap(e);
+    public boolean createNewSpeakap(SpeakapEmployee e) {
+        return dataController.newSpeakap(e);
     }
 
     @RequestMapping("/deletespeakap")
-    public void deleteSpeakap(String id) {
-        dataController.deleteSpeakap(id);
+    public boolean deleteSpeakap(String id) {
+        return dataController.deleteSpeakap(id);
     }
 }

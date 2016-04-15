@@ -1,6 +1,7 @@
 package be.usgprofessionals.model.dbclasses;
 
 import be.usgprofessionals.model.EID;
+import lombok.Data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,13 +11,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Digidatabase for USG Professionals
  */
 @XmlRootElement
+@Data
 public class Department {
     private String dept_name;
     private int dept_id;
     private EID reportsTo;
-
-    public Department() {
-    }
 
     public Department(String dept_name, int dept_id, EID reportsTo) {
         this.dept_name = dept_name;
@@ -24,27 +23,12 @@ public class Department {
         this.reportsTo = reportsTo;
     }
 
-    public String getDept_name() {
-        return dept_name;
-    }
-
-    public void setDept_name(String dept_name) {
-        this.dept_name = dept_name;
-    }
-
-    public int getDept_id() {
-        return dept_id;
-    }
-
-    public void setDept_id(int dept_id) {
-        this.dept_id = dept_id;
-    }
-
-    public EID getReportsTo() {
-        return reportsTo;
-    }
-
-    public void setReportsTo(EID reportsTo) {
-        this.reportsTo = reportsTo;
+    @Override
+    public String toString() {
+        return "Department{" +
+                "dept_name='" + dept_name + '\'' +
+                ", dept_id=" + dept_id +
+                ", reportsTo=" + reportsTo +
+                '}';
     }
 }

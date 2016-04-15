@@ -24,9 +24,14 @@ public class EID {
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o instanceof EID) {
             if (((EID) o).getId().equals(id)) {
@@ -34,10 +39,5 @@ public class EID {
             }
         }
         return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 }

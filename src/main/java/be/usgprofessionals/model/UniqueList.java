@@ -16,11 +16,7 @@ public class UniqueList<E> extends ArrayList<E> {
 
     @Override
     public boolean add(E e) {
-        if (this.contains(e)) {
-            return false;
-        } else {
-            return super.add(e);
-        }
+        return !this.contains(e) && super.add(e);
     }
 
     @Override
@@ -39,9 +35,7 @@ public class UniqueList<E> extends ArrayList<E> {
 
     @Override
     public void add(int index, E element) {
-        if (this.contains(element)) {
-            return;
-        } else {
+        if (!this.contains(element)) {
             super.add(index, element);
         }
     }
@@ -63,7 +57,6 @@ public class UniqueList<E> extends ArrayList<E> {
                     this.add(i, (E) project1);
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    //TODO in case of error, show nice msg so they know what and how to fix
                 }
 
                 return false;

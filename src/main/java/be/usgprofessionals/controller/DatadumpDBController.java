@@ -6,23 +6,18 @@ import be.usgprofessionals.QConsultantdump;
 import be.usgprofessionals.QInternaldump;
 import be.usgprofessionals.QProjectsdump;
 import be.usgprofessionals.QSpeakapdump;
-import be.usgprofessionals.model.dbclasses.*;
+import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
+import be.usgprofessionals.model.dbclasses.InternalEmployee;
+import be.usgprofessionals.model.dbclasses.Project;
+import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
 import com.mysema.query.Tuple;
-import com.mysema.query.sql.MySQLTemplates;
 import com.mysema.query.sql.SQLQuery;
-import com.mysema.query.sql.SQLSerializer;
-import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.dml.SQLDeleteClause;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
@@ -134,15 +129,17 @@ public class DatadumpDBController extends DBController {
         return speakapEmployees;
     }
 
-    public void newSpeakap(SpeakapEmployee e) {
+    public boolean newSpeakap(SpeakapEmployee e) {
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
         SQLInsertClause query = createInsertClause(qSpeakapdump);
-        query.values(e.getEid(), e.getEmail(), e.getFirstname(), e.getLastname(), e.getBirthday(), e.getTel(), e.getProfilePicURL()).execute();
+        Long rows = query.values(e.getEid(), e.getEmail(), e.getFirstname(), e.getLastname(), e.getBirthday(), e.getTel(), e.getProfilePicURL()).execute();
+        return rows != 0;
     }
 
-    public void deleteSpeakap(String id) {
+    public boolean deleteSpeakap(String id) {
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
         SQLDeleteClause query = createDeleteClause(qSpeakapdump);
-        query.where(qSpeakapdump.eid.eq(id)).execute();
+        Long rows = query.where(qSpeakapdump.eid.eq(id)).execute();
+        return rows != 0;
     }
 }

@@ -1,16 +1,19 @@
 package be.usgprofessionals.model.dbclasses;
 
+import lombok.Data;
+
 /**
  * Created by Thomas Straetmans on 18/02/2016.
  * <p>
  * Digidatabase for USG Professionals
  */
+@Data
 public class Project {
-    public String branch;
-    public String costumer;
-    public String empId;
-    public String enddate;
-    public String startdate;
+    private String branch;
+    private String costumer;
+    private String empId;
+    private String enddate;
+    private String startdate;
 
     public Project(String branch, String costumer, String empId, String enddate, String startdate) {
         this.branch = branch;
@@ -18,57 +21,6 @@ public class Project {
         this.empId = empId;
         this.enddate = enddate;
         this.startdate = startdate;
-    }
-
-    public String getBranch() {
-        return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
-    }
-
-    public String getCostumer() {
-        return costumer;
-    }
-
-    public void setCostumer(String costumer) {
-        this.costumer = costumer;
-    }
-
-    public String getEmpId() {
-        return empId;
-    }
-
-    public void setEmpId(String empId) {
-        this.empId = empId;
-    }
-
-    public String getEnddate() {
-        return enddate;
-    }
-
-    public void setEnddate(String enddate) {
-        this.enddate = enddate;
-    }
-
-    public String getStartdate() {
-        return startdate;
-    }
-
-    public void setStartdate(String startdate) {
-        this.startdate = startdate;
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "branch='" + branch + '\'' +
-                ", costumer='" + costumer + '\'' +
-                ", empId='" + empId + '\'' +
-                ", enddate='" + enddate + '\'' +
-                ", startdate='" + startdate + '\'' +
-                '}';
     }
 
     @Override
