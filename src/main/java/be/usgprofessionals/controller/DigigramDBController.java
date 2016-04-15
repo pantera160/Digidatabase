@@ -140,7 +140,11 @@ public class DigigramDBController extends DBController {
                 "from users");
         while (result.next()) {
             int employer_id = result.getInt("EMPLOYER_ID");
+            int dept_id = result.getInt("DEPT_ID");
+            int next_dept_id = result.getInt("NEXTDEPT_ID");
+            int project_id = result.getInt("PROJECT_ID");
             String employer_name;
+            stmt = connection.createStatement();
             ResultSet emp_id_set = stmt.executeQuery("select name from employer where employer_id =" + employer_id);
             if (emp_id_set.next()) {
                 employer_name = emp_id_set.getString("NAME");
@@ -148,8 +152,9 @@ public class DigigramDBController extends DBController {
                 System.out.println("no employers found for id: " + employer_id);
                 continue;
             }
-            int dept_id = result.getInt("DEPT_ID");
+
             String dept_name;
+            stmt = connection.createStatement();
             ResultSet dept_id_set = stmt.executeQuery("SELECT dept_name from departments where dept_id = " + dept_id);
             if (dept_id_set.next()) {
                 dept_name = dept_id_set.getString("DEPT_NAME");
@@ -157,21 +162,23 @@ public class DigigramDBController extends DBController {
                 System.out.println("No dept found for id: " + dept_id);
                 continue;
             }
-            int next_dept_id = result.getInt("NEXTDEPT_ID");
+
             String next_dept_name;
             if (!result.wasNull()) {
+                stmt = connection.createStatement();
                 ResultSet next_dept_id_set = stmt.executeQuery("select dept_name from departments where dept_id = " + next_dept_id);
                 if (next_dept_id_set.next()) {
                     next_dept_name = next_dept_id_set.getString("DEPT_NAME");
                 } else {
-                    System.out.println("No dept found for id:" + next_dept_id);
-                    continue;
+                    System.out.println("No dept found for next_dept id:" + next_dept_id);
+                    next_dept_name = "NULL";
                 }
             } else {
                 next_dept_name = "NULL";
             }
-            int project_id = result.getInt("PROJECT_ID");
+
             String project_name;
+            stmt = connection.createStatement();
             ResultSet project_id_set = stmt.executeQuery("select name from project where project_id =" + project_id);
             if (project_id_set.next()) {
                 project_name = project_id_set.getString("NAME");

@@ -6,7 +6,9 @@ import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
 import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -46,13 +48,13 @@ public class RESTService {
         return dataController.getAllDepartments();
     }
 
-    @RequestMapping("/newdepartment")
-    public void createNewDepartment(Department department) {
+    @RequestMapping(value = "/newdepartment", method = RequestMethod.POST)
+    public void createNewDepartment(@RequestBody Department department) {
         dataController.newDepartment(department);
     }
 
-    @RequestMapping("/deletedepartment")
-    public void deleteDepartment(String id) {
+    @RequestMapping(value = "/deletedepartment", method = RequestMethod.DELETE)
+    public void deleteDepartment(@RequestBody String id) {
         dataController.deleteDepartment(id);
     }
 
@@ -61,13 +63,13 @@ public class RESTService {
         return dataController.getAllEmployees();
     }
 
-    @RequestMapping("/deleteemployee")
-    public void deleteEmployee(String eid) {
+    @RequestMapping(value = "/deleteemployee", method = RequestMethod.DELETE)
+    public void deleteEmployee(@RequestBody String eid) {
         dataController.deleteEmployee(eid);
     }
 
-    @RequestMapping("/newemployee")
-    public String newEmployee(Employee employee) {
+    @RequestMapping(value = "/newemployee", method = RequestMethod.POST)
+    public String newEmployee(@RequestBody Employee employee) {
         return dataController.newEmployee(employee);
     }
 
@@ -76,13 +78,13 @@ public class RESTService {
         return dataController.getAllSpeakaps();
     }
 
-    @RequestMapping("/newspeakap")
-    public void createNewSpeakap(SpeakapEmployee e) {
+    @RequestMapping(value = "/newspeakap", method = RequestMethod.POST)
+    public void createNewSpeakap(@RequestBody SpeakapEmployee e) {
         dataController.newSpeakap(e);
     }
 
-    @RequestMapping("/deletespeakap")
-    public void deleteSpeakap(String id) {
+    @RequestMapping(value = "/deletespeakap", method = RequestMethod.DELETE)
+    public void deleteSpeakap(@RequestBody String id) {
         dataController.deleteSpeakap(id);
     }
 }
