@@ -15,6 +15,9 @@ public class Department {
     private int dept_id;
     private EID reportsTo;
 
+    public Department() {
+    }
+
     public Department(String dept_name, int dept_id, EID reportsTo) {
         this.dept_name = dept_name;
         this.dept_id = dept_id;
