@@ -2,10 +2,19 @@ package be.usgprofessionals.controller;
 
 import be.usgprofessionals.model.UniqueList;
 import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
+import be.usgprofessionals.model.dbclasses.Department;
 import be.usgprofessionals.model.dbclasses.Project;
 import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
@@ -14,19 +23,38 @@ import static org.junit.Assert.assertTrue;
  * <p>
  * Digidatabase for USG Professionals
  */
+@RunWith(MockitoJUnitRunner.class)
 public class DataControllerTest {
 
-    DataController dataController;
+
+    @InjectMocks
+    DataController dataController = new DataController();
+    @Mock
+    private DatadumpDBController datadumpDbController;
+    @Mock
+    private DigigramDBController digigramDBController;
 
     @Before
     public void setUp() {
-        dataController = new DataController();
+        //dataController = new DataController();
     }
 
     @Test
-    public void testCreateEmployeeObject() throws Exception {
+    public void getAllDepartments() throws Exception {
+        ArrayList<Department> departementslijst = new ArrayList<>();
+        Mockito.when(digigramDBController.getAllDepartments()).thenReturn(departementslijst);
+
+        //    Mockito.when(digigramDBController.getCreateProjectID(Mockito.eq("abc"))).thenThrow(RuntimeException.class);
+        //    Mockito.verify(digigramDBController, Mockito.times(1)).insertEmployee();
+        //    Mockito.verifyNoMoreInteractions(digigramDBController);
+
+        ArrayList<Department> allDepartments = dataController.getAllDepartments();
+
+        Assertions.assertThat(allDepartments).isSameAs(departementslijst);
+
 
     }
+
 
     @Test
     public void testGetMainProject() throws Exception {
@@ -44,6 +72,8 @@ public class DataControllerTest {
         assertTrue(projects.size() == 4);
         Project main = dataController.getMainProject(projects);
         assertTrue(main.equals(q));
+        Assertions.assertThat(projects).hasSize(4);
+        Assertions.assertThat(projects).extracting("costumer").containsOnly("Foo", "USG", "USG Professionals", "KBC");
     }
 
     @Test

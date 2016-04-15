@@ -119,7 +119,7 @@ public class DigigramDBController extends DBController {
 
     public void newDepartment(Department department) throws SQLException {
         createConnectionQuery();
-        PreparedStatement stmt = connection.prepareStatement("insert into departments('DEPT_NAME', 'MANAGER_ID') values(?,?)");
+        PreparedStatement stmt = connection.prepareStatement("insert into departments(DEPT_NAME, MANAGER_ID) values(?,?)");
         stmt.setString(1, department.getDept_name());
         stmt.setString(2, department.getReportsTo().toString());
         stmt.executeUpdate();

@@ -17,7 +17,6 @@ import java.util.ArrayList;
  */
 @RestController
 @RequestMapping("/dbservice")
-@ComponentScan("be.usgprofessionals.controller")
 public class RESTService {
 
     @Autowired

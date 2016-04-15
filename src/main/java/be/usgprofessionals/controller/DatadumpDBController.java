@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Created by Thomas Straetmans on 15/02/2016.
@@ -36,16 +37,34 @@ public class DatadumpDBController extends DBController {
         super("DBURL");
     }
 
-    public ArrayList<SpeakapEmployee> getAllEmployees() {
+    public List<SpeakapEmployee> getAllEmployees() {
+        List<SpeakapEmployee> speakapEmployees = new ArrayList<>();
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
-        ArrayList<SpeakapEmployee> speakapEmployees = new ArrayList<>();
         SQLQuery query = createConnectionQuery();
         List<Tuple> results = query
                 .from(qSpeakapdump)
                 .list(qSpeakapdump.eid, qSpeakapdump.profilePicURL, qSpeakapdump.firstname, qSpeakapdump.lastname, qSpeakapdump.birthday);
-        results.forEach(employee -> speakapEmployees.add(new SpeakapEmployee(employee.get(qSpeakapdump.eid), employee.get(qSpeakapdump.email), employee.get(qSpeakapdump.firstname),
-                employee.get(qSpeakapdump.lastname), employee.get(qSpeakapdump.profilePicURL), employee.get(qSpeakapdump.tel), employee.get(qSpeakapdump.birthday).toString())));
+        // results.forEach(employee -> speakapEmployees.add(new SpeakapEmployee(employee.get(qSpeakapdump.eid), employee.get(qSpeakapdump.email), employee.get(qSpeakapdump.firstname),
+        //        employee.get(qSpeakapdump.lastname), employee.get(qSpeakapdump.profilePicURL), employee.get(qSpeakapdump.tel), employee.get(qSpeakapdump.birthday).toString())));
+        //TODO
+        speakapEmployees = results.stream().map(DatadumpDBController::convertEmployee).collect(Collectors.toList());
+
+        QConsultantdump qConsultantdump = QConsultantdump.consultantdump;
+        QInternaldump qInternaldump = QInternaldump.internaldump;
+        SQLQuery q = query.from(qSpeakapdump);
+        q.leftJoin(qConsultantdump).on(qConsultantdump.fullname.eq(qSpeakapdump.lastname.concat(" ").concat(qSpeakapdump.firstname)));
+        q.leftJoin(qInternaldump).on(qInternaldump.name.eq(qSpeakapdump.lastname).and(qInternaldump.firstName.eq(qSpeakapdump.firstname)));
+        q.orderBy(qSpeakapdump.eid.asc());
+        List<Tuple> list = q.list(qSpeakapdump, qConsultantdump, qInternaldump);
+
+
         return speakapEmployees;
+    }
+
+    public static SpeakapEmployee convertEmployee(Tuple employee) {
+        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
+        return new SpeakapEmployee(employee.get(qSpeakapdump.eid), employee.get(qSpeakapdump.email), employee.get(qSpeakapdump.firstname),
+                employee.get(qSpeakapdump.lastname), employee.get(qSpeakapdump.profilePicURL), employee.get(qSpeakapdump.tel), employee.get(qSpeakapdump.birthday).toString());
     }
 
     public ConsultantEmployee getConsultant(String fullname) throws DataMergeException, DataNotFoundException {

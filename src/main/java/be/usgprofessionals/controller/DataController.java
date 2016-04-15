@@ -24,7 +24,6 @@ import java.util.*;
  * <p>
  * Digidatabase for USG Professionals
  */
-@ComponentScan("be.usgprofessionals.controller")
 @Component
 public class DataController {
 
@@ -34,12 +33,6 @@ public class DataController {
     private DigigramDBController digigramDBController;
 
     public DataController() {
-        if (datadumpDbController == null) {
-            datadumpDbController = new DatadumpDBController();
-        }
-        if (digigramDBController == null) {
-            digigramDBController = new DigigramDBController();
-        }
     }
 
     public ArrayList<String> run() {

@@ -30,7 +30,7 @@ public class DatadumpDBControllerTest {
 
     @Test
     public void testGetAllEmployees() throws Exception {
-        ArrayList<SpeakapEmployee> list = datadumpDbController.getAllEmployees();
+        List<SpeakapEmployee> list = datadumpDbController.getAllEmployees();
         System.out.println(list.size());
         System.out.println(list.get(list.size() / 2));
         assertTrue(list.size() > 0);
@@ -88,7 +88,7 @@ public class DatadumpDBControllerTest {
     @Test
     public void testTimeToRequestAllConsultants() throws Exception {
         long starttime = System.nanoTime();
-        ArrayList<SpeakapEmployee> speakaps = datadumpDbController.getAllEmployees();
+        List<SpeakapEmployee> speakaps = datadumpDbController.getAllEmployees();
         ArrayList<ConsultantEmployee> consultants = new ArrayList<>();
         speakaps.forEach(employee -> {
             try {
