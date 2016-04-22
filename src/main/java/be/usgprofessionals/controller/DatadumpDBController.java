@@ -6,23 +6,19 @@ import be.usgprofessionals.QConsultantdump;
 import be.usgprofessionals.QInternaldump;
 import be.usgprofessionals.QProjectsdump;
 import be.usgprofessionals.QSpeakapdump;
-import be.usgprofessionals.model.dbclasses.*;
+import be.usgprofessionals.model.SpeakapDBObject;
+import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
+import be.usgprofessionals.model.dbclasses.InternalEmployee;
+import be.usgprofessionals.model.dbclasses.Project;
+import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
 import com.mysema.query.Tuple;
-import com.mysema.query.sql.MySQLTemplates;
 import com.mysema.query.sql.SQLQuery;
-import com.mysema.query.sql.SQLSerializer;
-import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.dml.SQLDeleteClause;
 import com.mysema.query.sql.dml.SQLInsertClause;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
@@ -144,5 +140,26 @@ public class DatadumpDBController extends DBController {
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
         SQLDeleteClause query = createDeleteClause(qSpeakapdump);
         query.where(qSpeakapdump.eid.eq(id)).execute();
+    }
+
+    public SpeakapDBObject convertTupleToEmployees(Tuple employee) {
+        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
+        QInternaldump qInternaldump = new QInternaldump("i");
+        QConsultantdump qConsultantdump = new QConsultantdump("c");
+        SpeakapEmployee speakapEmployee = new SpeakapEmployee(employee.get(qSpeakapdump.eid), employee.get(qSpeakapdump.email), employee.get(qSpeakapdump.firstname),
+                employee.get(qSpeakapdump.lastname), employee.get(qSpeakapdump.profilePicURL), employee.get(qSpeakapdump.tel), employee.get(qSpeakapdump.birthday).toString());
+        InternalEmployee internalEmployee = new InternalEmployee(employee.get(qInternaldump.eMail), employee.get(qInternaldump.firstName), employee.get(qInternaldump.fix),
+                employee.get(qInternaldump.function), employee.get(qInternaldump.level0), employee.get(qInternaldump.level1), employee.get(qInternaldump.level2), employee.get(qInternaldump.level3),
+                employee.get(qInternaldump.mobile), employee.get(qInternaldump.name), employee.get(qInternaldump.office), employee.get(qInternaldump.team));
+        ConsultantEmployee consultantEmployee = new ConsultantEmployee(employee.get(qConsultantdump.birthday), employee.get(qConsultantdump.branch), employee.get(qConsultantdump.email),
+                employee.get(qConsultantdump.fix), employee.get(qConsultantdump.fullname), 0.0, employee.get(qConsultantdump.idnr).toString(), employee.get(qConsultantdump.mobile));
+        if (internalEmployee.getFirstName() == null) {
+
+        } else if (consultantEmployee.getFullname() == null) {
+
+        } else {
+
+        }
+        return null;
     }
 }

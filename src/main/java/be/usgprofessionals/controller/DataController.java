@@ -10,7 +10,6 @@ import be.usgprofessionals.model.UniqueList;
 import be.usgprofessionals.model.dbclasses.*;
 import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -229,25 +228,27 @@ public class DataController {
     }
 
     public ArrayList<Employee> getAllEmployees() {
-        try {
-            return digigramDBController.getAllEmployees();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+//        try {
+//            digigramDBController.getAllEmployees();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return new ArrayList<>();
+//        }
+        return null;
     }
 
     public String newEmployee(Employee employee) {
-        try {
-            digigramDBController.createNewEmployee(employee);
-            return "";
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return e.getMessage();
-        }
+//        try {
+//            digigramDBController.createNewEmployee(employee);
+//            return "";
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return e.getMessage();
+//        }
+        return null;
     }
 
     public void deleteEmployee(String eid) {
-        digigramDBController.deleteEmployee(eid);
+        //digigramDBController.deleteEmployee(eid);
     }
 }
