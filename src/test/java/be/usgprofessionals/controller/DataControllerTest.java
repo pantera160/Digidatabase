@@ -36,7 +36,7 @@ public class DataControllerTest {
 
     @Before
     public void setUp() {
-        //dataController = new DataController();
+        dataController = new DataController();
     }
 
     @Test
@@ -86,7 +86,13 @@ public class DataControllerTest {
         projects.addProject(p2);
         projects.addProject(p3);
         SpeakapEmployee speakapEmployee = new SpeakapEmployee("12345abcde6789ts", "", "Thomas", "Straetmans", "", "", "");
-        ConsultantEmployee consultantEmployee = new ConsultantEmployee("Jan 1, 1991", "ICT - General", "thomasstraetmans@hotmail.com", "", "Straetmans Thomas", 1000, "123456", "");
+        ConsultantEmployee consultantEmployee = new ConsultantEmployee("Jan 1, 1991", "ICT - General", "thomasstraetmans@hotmail.com", "", "Straetmans Thomas", 1000, 123456, "");
         System.out.println(dataController.createEmployeeObject(speakapEmployee, consultantEmployee, projects));
+    }
+
+    @Test
+    public void run() {
+        ArrayList<String> errors = dataController.run();
+        errors.forEach(System.out::println);
     }
 }

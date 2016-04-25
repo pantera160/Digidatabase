@@ -1,12 +1,8 @@
 package be.usgprofessionals.controller;
 
 import be.usgprofessionals.Exceptions.DataMergeException;
-import be.usgprofessionals.Exceptions.DataNotFoundException;
 import be.usgprofessionals.Exceptions.EIDFormatIncorrectException;
-import be.usgprofessionals.QConsultantdump;
-import be.usgprofessionals.QSpeakapdump;
-import be.usgprofessionals.model.EID;
-import be.usgprofessionals.model.UniqueList;
+import be.usgprofessionals.model.*;
 import be.usgprofessionals.model.dbclasses.*;
 import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,53 +21,40 @@ import java.util.*;
 @Component
 public class DataController {
 
-    //@Autowired
+    @Autowired
     private DatadumpDBController datadumpDbController;
     @Autowired
     private DigigramDBController digigramDBController;
+    private HashMap<String, String> deptNames;
 
     public DataController() {
+        deptNames = datadumpDbController.getDeptNames();
     }
 
     public ArrayList<String> run() {
-        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
-        QConsultantdump qConsultantdump = new QConsultantdump("c");
-        List<SpeakapEmployee> employees = datadumpDbController.getAllEmployees();
+        List<SpeakapDBObject> employees = datadumpDbController.getAllEmployees();
         ArrayList<String> errors = new ArrayList<>();
         ArrayList<Employee> digiEmployees = new ArrayList<>();
-        for (SpeakapEmployee employee : employees) {
-            String name = employee.getLastname();
-            String firstname = employee.getFirstname();
-            try {
 
-                ConsultantEmployee consultant = datadumpDbController.getConsultant(name + " " + firstname);
-                List<Project> projects = getProjects(consultant.getIdnr());
-                digiEmployees.add(createEmployeeObject(employee, consultant, projects));
-            } catch (DataNotFoundException dnfe) {
-                errors.add(dnfe.getMessage());
+        for (SpeakapDBObject speakapDBObject : employees) {
+            if (speakapDBObject instanceof SpeakapConsultant) {
+                SpeakapConsultant consultant = (SpeakapConsultant) speakapDBObject;
                 try {
-                    InternalEmployee internalEmployee = datadumpDbController.getInternal(name, firstname);
-                    digiEmployees.add(createEmployeeObject(employee, internalEmployee, null));
-                } catch (DataMergeException | DataNotFoundException e) {
+                    List<Project> projects = getProjects(consultant.getConsultantEmployee().getIdnr() + "");
+                    digiEmployees.add(createEmployeeObject(consultant.getSpeakapEmployee(), consultant.getConsultantEmployee(), projects));
+                } catch (DataMergeException | EIDFormatIncorrectException e) {
                     errors.add(e.getMessage());
-                    e.printStackTrace();
-                } catch (EIDFormatIncorrectException e) {
-                    e.printStackTrace();
                 }
-                dnfe.printStackTrace();
-            } catch (DataMergeException dme) {
-                errors.add(dme.getMessage());
-            } catch (EIDFormatIncorrectException e) {
-                e.printStackTrace();
+            } else if (speakapDBObject instanceof SpeakapInternal) {
+                SpeakapInternal internal = (SpeakapInternal) speakapDBObject;
+                try {
+                    digiEmployees.add(createEmployeeObject(internal.getSpeakapEmployee(), internal.getInternalEmployee(), null));
+                } catch (EIDFormatIncorrectException e) {
+                    errors.add(e.getMessage());
+                }
             }
         }
-
         return insertEmployees(errors, digiEmployees);
-    }
-
-    private boolean insertData(SpeakapEmployee speakapEmployee, ConsultantEmployee consultantEmployee, List<Project> projects) {
-
-        return true;
     }
 
     public Employee createEmployeeObject(SpeakapEmployee speakapEmployee, Object consultantInternalEmployee, List<Project> projects) throws EIDFormatIncorrectException {
@@ -83,7 +66,7 @@ public class DataController {
             try {
                 birthday = sdf.parse(consultantEmployee.getBirthday());
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
                 birthday = new Date();
             }
             return new Employee(birthday, speakapEmployee.getFirstname(), speakapEmployee.getLastname(),
@@ -97,7 +80,7 @@ public class DataController {
             try {
                 birthday = sdf.parse(speakapEmployee.getBirthday());
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
                 birthday = new Date();
             }
             return new Employee(birthday, speakapEmployee.getFirstname(), speakapEmployee.getLastname(), internalEmployee.getEMail(), speakapEmployee.getProfilePicURL(),
@@ -109,7 +92,7 @@ public class DataController {
 
     private InternalEmployee setDepartments(InternalEmployee internalEmployee) {
         String level0 = internalEmployee.getLevel0();
-        String level1 = internalEmployee.getLevel0();
+        String level1 = internalEmployee.getLevel1();
         String level2 = internalEmployee.getLevel2();
         String level3 = internalEmployee.getLevel3();
         String department = internalEmployee.getTeam();
@@ -120,7 +103,7 @@ public class DataController {
             internalEmployee.setNext_dept(level2);
         } else if (!Objects.equals(level2, "")) {
             if (!Objects.equals(level3, "")) {
-                internalEmployee.setNext_dept(internalEmployee.getTeam());
+                internalEmployee.setNext_dept(department);
             }
             internalEmployee.setTeam(level2);
         }

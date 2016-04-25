@@ -2,15 +2,14 @@ package be.usgprofessionals.controller;
 
 import be.usgprofessionals.Exceptions.DataMergeException;
 import be.usgprofessionals.Exceptions.DataNotFoundException;
+import be.usgprofessionals.model.SpeakapDBObject;
 import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
 import be.usgprofessionals.model.dbclasses.Project;
-import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -30,7 +29,7 @@ public class DatadumpDBControllerTest {
 
     @Test
     public void testGetAllEmployees() throws Exception {
-        List<SpeakapEmployee> list = datadumpDbController.getAllEmployees();
+        List<SpeakapDBObject> list = datadumpDbController.getAllEmployees();
         System.out.println(list.size());
         System.out.println(list.get(list.size() / 2));
         assertTrue(list.size() > 0);
@@ -40,7 +39,7 @@ public class DatadumpDBControllerTest {
     public void testGetConsultant() throws Exception {
         ConsultantEmployee consultantEmployee = datadumpDbController.getConsultant("Straetmans Thomas");
         System.out.println(consultantEmployee);
-        assertTrue(consultantEmployee.getIdnr().equals("3456739"));
+        assertTrue(consultantEmployee.getIdnr() == 3456739);
     }
 
     @Test(expected = DataMergeException.class)
@@ -83,22 +82,5 @@ public class DatadumpDBControllerTest {
         expectedException.expect(DataMergeException.class);
         expectedException.expectMessage("o project has been found for the employee by number: 000002");
         List<Project> projects = datadumpDbController.getProjects("000002");
-    }
-
-    @Test
-    public void testTimeToRequestAllConsultants() throws Exception {
-        long starttime = System.nanoTime();
-        List<SpeakapEmployee> speakaps = datadumpDbController.getAllEmployees();
-        ArrayList<ConsultantEmployee> consultants = new ArrayList<>();
-        speakaps.forEach(employee -> {
-            try {
-                consultants.add(datadumpDbController.getConsultant(employee.getLastname() + " " + employee.getFirstname()));
-            } catch (DataMergeException | DataNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-        long endtime = System.nanoTime();
-        long duration = (endtime - starttime) / 1000000;
-        System.out.println("function durration: " + duration);
     }
 }

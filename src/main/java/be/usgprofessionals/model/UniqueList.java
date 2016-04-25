@@ -56,7 +56,7 @@ public class UniqueList<E> extends ArrayList<E> {
                     }
                     this.add(i, (E) project1);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
 
                 return false;

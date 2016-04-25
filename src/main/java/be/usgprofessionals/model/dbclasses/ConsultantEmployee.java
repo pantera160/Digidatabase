@@ -16,10 +16,10 @@ public class ConsultantEmployee {
     private String fix;
     private String fullname;
     private double hours;
-    private String idnr;
+    private int idnr;
     private String mobile;
 
-    public ConsultantEmployee(String birthday, String branch, String email, String fix, String fullname, double hours, String idnr, String mobile) {
+    public ConsultantEmployee(String birthday, String branch, String email, String fix, String fullname, double hours, int idnr, String mobile) {
         this.birthday = birthday;
         this.branch = branch;
         this.email = email;

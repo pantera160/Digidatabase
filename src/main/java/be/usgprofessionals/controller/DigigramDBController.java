@@ -63,7 +63,7 @@ public class DigigramDBController extends DBController {
         Statement stmt = connection.createStatement();
         ResultSet result = stmt.executeQuery("select employer_id from employer where name ='" + employer_name + "'");
         if (!result.next()) {
-            int id = stmt.executeUpdate("insert into employers(name, city, adress, iconURI) values('" + employer_name + "', NULL, NULL, NULL)", Statement.RETURN_GENERATED_KEYS);
+            int id = stmt.executeUpdate("insert into employer(name, city, adress, iconURI) values('" + employer_name + "', NULL, NULL, NULL)", Statement.RETURN_GENERATED_KEYS);
             return new Employer(id, employer_name, true);
         } else {
             return new Employer(result.getInt(1), employer_name, false);
@@ -73,7 +73,9 @@ public class DigigramDBController extends DBController {
 
     public void insertEmployee(Department dept, Department next_dept, int employer_id, Employee employee, int project_id) throws SQLException {
         createConnectionQuery();
-        PreparedStatement stmt = connection.prepareStatement("insert into users values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement stmt = connection.prepareStatement("insert into users values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) on duplicate key update userId=values(userid), firstName=values(firstName)," +
+                "lastName=values(lastName), profilePicURI=values(profilePicURI), uniqueProperty=values(uniqueProperty), project_id=values(project_id),employer_id=values(employer_id), intern=values(intern)," +
+                "dept_id=values(dept_id), reportsto=values(reportsTo), nextDept_id=values(nextDept_id), birthday=values(birthday), email=values(email), tel = values(tel)");
         stmt.setString(1, employee.getEid().getId());
         stmt.setString(2, employee.getFirst_name());
         stmt.setString(3, employee.getLast_name());
