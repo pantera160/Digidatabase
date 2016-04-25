@@ -6,9 +6,7 @@ import be.usgprofessionals.model.dbclasses.SpeakapEmployee;
 import be.usgprofessionals.model.employee.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -47,29 +45,24 @@ public class RESTService {
         return dataController.getAllDepartments();
     }
 
-    @RequestMapping(value = "/newdepartment", method = RequestMethod.POST)
-    public void createNewDepartment(@RequestBody Department department) {
-        dataController.newDepartment(department);
+    @RequestMapping("/newdepartment")
+    public boolean createNewDepartment(Department department) {
+        return dataController.newDepartment(department);
     }
 
-    @RequestMapping(value = "/deletedepartment", method = RequestMethod.DELETE)
-    public void deleteDepartment(@RequestBody String id) {
-        dataController.deleteDepartment(id);
+    @RequestMapping("/deletedepartment")
+    public boolean deleteDepartment(String id) {
+        return dataController.deleteDepartment(id);
     }
 
     @RequestMapping("/employees")
-    public ArrayList<Employee> getAllEmployees() {
-        return dataController.getAllEmployees();
+    public void getAllEmployees() {
+
     }
 
-    @RequestMapping(value = "/deleteemployee", method = RequestMethod.DELETE)
-    public void deleteEmployee(@RequestBody String eid) {
-        dataController.deleteEmployee(eid);
-    }
-
-    @RequestMapping(value = "/newemployee", method = RequestMethod.POST)
-    public String newEmployee(@RequestBody Employee employee) {
-        return dataController.newEmployee(employee);
+    @RequestMapping("/newemployee")
+    public boolean createNewEmployee(Employee employee) {
+        return false;
     }
 
     @RequestMapping("/speakaps")
@@ -77,13 +70,13 @@ public class RESTService {
         return dataController.getAllSpeakaps();
     }
 
-    @RequestMapping(value = "/newspeakap", method = RequestMethod.POST)
-    public void createNewSpeakap(@RequestBody SpeakapEmployee e) {
-        dataController.newSpeakap(e);
+    @RequestMapping("/newspeakap")
+    public boolean createNewSpeakap(SpeakapEmployee e) {
+        return dataController.newSpeakap(e);
     }
 
-    @RequestMapping(value = "/deletespeakap", method = RequestMethod.DELETE)
-    public void deleteSpeakap(@RequestBody String id) {
-        dataController.deleteSpeakap(id);
+    @RequestMapping("/deletespeakap")
+    public boolean deleteSpeakap(String id) {
+        return dataController.deleteSpeakap(id);
     }
 }

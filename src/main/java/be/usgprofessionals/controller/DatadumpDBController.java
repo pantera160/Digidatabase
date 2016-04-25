@@ -6,7 +6,6 @@ import be.usgprofessionals.QConsultantdump;
 import be.usgprofessionals.QInternaldump;
 import be.usgprofessionals.QProjectsdump;
 import be.usgprofessionals.QSpeakapdump;
-import be.usgprofessionals.model.SpeakapDBObject;
 import be.usgprofessionals.model.dbclasses.ConsultantEmployee;
 import be.usgprofessionals.model.dbclasses.InternalEmployee;
 import be.usgprofessionals.model.dbclasses.Project;
@@ -130,36 +129,17 @@ public class DatadumpDBController extends DBController {
         return speakapEmployees;
     }
 
-    public void newSpeakap(SpeakapEmployee e) {
+    public boolean newSpeakap(SpeakapEmployee e) {
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
         SQLInsertClause query = createInsertClause(qSpeakapdump);
-        query.values(e.getEid(), e.getEmail(), e.getFirstname(), e.getLastname(), e.getBirthday(), e.getTel(), e.getProfilePicURL()).execute();
+        Long rows = query.values(e.getEid(), e.getEmail(), e.getFirstname(), e.getLastname(), e.getBirthday(), e.getTel(), e.getProfilePicURL()).execute();
+        return rows != 0;
     }
 
-    public void deleteSpeakap(String id) {
+    public boolean deleteSpeakap(String id) {
         QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
         SQLDeleteClause query = createDeleteClause(qSpeakapdump);
-        query.where(qSpeakapdump.eid.eq(id)).execute();
-    }
-
-    public SpeakapDBObject convertTupleToEmployees(Tuple employee) {
-        QSpeakapdump qSpeakapdump = new QSpeakapdump("s");
-        QInternaldump qInternaldump = new QInternaldump("i");
-        QConsultantdump qConsultantdump = new QConsultantdump("c");
-        SpeakapEmployee speakapEmployee = new SpeakapEmployee(employee.get(qSpeakapdump.eid), employee.get(qSpeakapdump.email), employee.get(qSpeakapdump.firstname),
-                employee.get(qSpeakapdump.lastname), employee.get(qSpeakapdump.profilePicURL), employee.get(qSpeakapdump.tel), employee.get(qSpeakapdump.birthday).toString());
-        InternalEmployee internalEmployee = new InternalEmployee(employee.get(qInternaldump.eMail), employee.get(qInternaldump.firstName), employee.get(qInternaldump.fix),
-                employee.get(qInternaldump.function), employee.get(qInternaldump.level0), employee.get(qInternaldump.level1), employee.get(qInternaldump.level2), employee.get(qInternaldump.level3),
-                employee.get(qInternaldump.mobile), employee.get(qInternaldump.name), employee.get(qInternaldump.office), employee.get(qInternaldump.team));
-        ConsultantEmployee consultantEmployee = new ConsultantEmployee(employee.get(qConsultantdump.birthday), employee.get(qConsultantdump.branch), employee.get(qConsultantdump.email),
-                employee.get(qConsultantdump.fix), employee.get(qConsultantdump.fullname), 0.0, employee.get(qConsultantdump.idnr).toString(), employee.get(qConsultantdump.mobile));
-        if (internalEmployee.getFirstName() == null) {
-
-        } else if (consultantEmployee.getFullname() == null) {
-
-        } else {
-
-        }
-        return null;
+        Long rows = query.where(qSpeakapdump.eid.eq(id)).execute();
+        return rows != 0;
     }
 }

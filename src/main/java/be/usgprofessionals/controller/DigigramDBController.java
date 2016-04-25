@@ -117,18 +117,20 @@ public class DigigramDBController extends DBController {
         return departments;
     }
 
-    public void newDepartment(Department department) throws SQLException {
+    public boolean newDepartment(Department department) throws SQLException {
         createConnectionQuery();
         PreparedStatement stmt = connection.prepareStatement("insert into departments(DEPT_NAME, MANAGER_ID) values(?,?)");
         stmt.setString(1, department.getDept_name());
         stmt.setString(2, department.getReportsTo().toString());
-        stmt.executeUpdate();
+        int rows = stmt.executeUpdate();
+        return rows != 0;
     }
 
-    public void deleteDepartment(String id) throws SQLException {
+    public boolean deleteDepartment(String id) throws SQLException {
         createConnectionQuery();
         PreparedStatement stmt = connection.prepareStatement(("DELETE from departments where dept_id = ?"));
         stmt.setInt(1, Integer.parseInt(id));
-        stmt.executeUpdate();
+        int rows = stmt.executeUpdate();
+        return rows != 0;
     }
 }

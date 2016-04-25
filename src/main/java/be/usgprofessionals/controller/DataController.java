@@ -39,19 +39,19 @@ public class DataController {
         List<SpeakapEmployee> employees = datadumpDbController.getAllEmployees();
         ArrayList<String> errors = new ArrayList<>();
         ArrayList<Employee> digiEmployees = new ArrayList<>();
-        for (int i = 0; i < employees.size(); i++) {
-            String name = employees.get(i).getLastname();
-            String firstname = employees.get(i).getFirstname();
+        for (SpeakapEmployee employee : employees) {
+            String name = employee.getLastname();
+            String firstname = employee.getFirstname();
             try {
 
                 ConsultantEmployee consultant = datadumpDbController.getConsultant(name + " " + firstname);
                 List<Project> projects = getProjects(consultant.getIdnr());
-                digiEmployees.add(createEmployeeObject(employees.get(i), consultant, projects));
+                digiEmployees.add(createEmployeeObject(employee, consultant, projects));
             } catch (DataNotFoundException dnfe) {
                 errors.add(dnfe.getMessage());
                 try {
                     InternalEmployee internalEmployee = datadumpDbController.getInternal(name, firstname);
-                    digiEmployees.add(createEmployeeObject(employees.get(i), internalEmployee, null));
+                    digiEmployees.add(createEmployeeObject(employee, internalEmployee, null));
                 } catch (DataMergeException | DataNotFoundException e) {
                     errors.add(e.getMessage());
                     e.printStackTrace();
@@ -100,7 +100,7 @@ public class DataController {
                 e.printStackTrace();
                 birthday = new Date();
             }
-            return new Employee(birthday, speakapEmployee.getFirstname(), speakapEmployee.getLastname(), internalEmployee.geteMail(), speakapEmployee.getProfilePicURL(),
+            return new Employee(birthday, speakapEmployee.getFirstname(), speakapEmployee.getLastname(), internalEmployee.getEMail(), speakapEmployee.getProfilePicURL(),
                     internalEmployee.getMobile(), internalEmployee.getTeam(), internalEmployee.getNext_dept(), "USG Professionals", internalEmployee.getFunction(), 1, new EID(speakapEmployee.getEid()), null);
         } else {
             return null;
@@ -203,27 +203,29 @@ public class DataController {
         return datadumpDbController.getAllSpeakaps();
     }
 
-    public void newSpeakap(SpeakapEmployee e) {
-        datadumpDbController.newSpeakap(e);
+    public boolean newSpeakap(SpeakapEmployee e) {
+        return datadumpDbController.newSpeakap(e);
     }
 
-    public void newDepartment(Department department) {
+    public boolean newDepartment(Department department) {
         try {
-            digigramDBController.newDepartment(department);
+            return digigramDBController.newDepartment(department);
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void deleteSpeakap(String id) {
-        datadumpDbController.deleteSpeakap(id);
+    public boolean deleteSpeakap(String id) {
+        return datadumpDbController.deleteSpeakap(id);
     }
 
-    public void deleteDepartment(String id) {
+    public boolean deleteDepartment(String id) {
         try {
-            digigramDBController.deleteDepartment(id);
+            return digigramDBController.deleteDepartment(id);
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

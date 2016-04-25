@@ -1,5 +1,7 @@
 package be.usgprofessionals.model.dbclasses;
 
+import lombok.Data;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,20 +11,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 //POJO that contains the data from an employee found in Speakap.
 @XmlRootElement
+@Data
 public class SpeakapEmployee {
 
     private String birthday;
-
     private String eid;
-
     private String email;
-
     private String firstname;
-
     private String lastname;
-
     private String profilePicURL;
-
     private String tel;
 
     public SpeakapEmployee(String eid, String email, String firstname, String lastname, String profilePicURL, String tel, String birthday) {
@@ -32,62 +29,6 @@ public class SpeakapEmployee {
         this.lastname = lastname;
         this.profilePicURL = profilePicURL;
         this.tel = tel;
-        this.birthday = birthday;
-    }
-
-    public String getEid() {
-        return eid;
-    }
-
-    public void setEid(String eid) {
-        this.eid = eid;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getProfilePicURL() {
-        return profilePicURL;
-    }
-
-    public void setProfilePicURL(String profilePicURL) {
-        this.profilePicURL = profilePicURL;
-    }
-
-    public String getTel() {
-        return tel;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
